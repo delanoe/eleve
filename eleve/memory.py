@@ -68,8 +68,14 @@ class MemoryLeaf(object):
 class MemoryTrie:
     """ In-memory tree (made to be simple, no specific optimizations)
     """
+    # Use PRIVATE_USE_AREA codes
+    sentence_start = "\ue02b" # in utf8 : b"\xee\x80\xab"
+    #  see http://www.fileformat.info/info/unicode/char/e02b/index.htm
+    sentence_end = "\ue02d" # in utf8 : b"\xee\x80\xad"
+    #  see http://www.fileformat.info/info/unicode/char/e02d/index.htm
 
-    def __init__(self, terminals=[]):
+
+    def __init__(self, terminals=[], default_ngram_length=5):
         """ Constructor
 
         :param terminals: Tokens that are in "terminals" array are counted as
@@ -85,6 +91,16 @@ class MemoryTrie:
         self.terminals = set(terminals)
         self.dirty = True
 
+        assert isinstance(default_ngram_length, int) and default_ngram_length > 0
+        self._default_ngram_length = default_ngram_length
+        terminals = [self.sentence_start, self.sentence_end]
+
+    @property
+    def default_ngram_length(self):
+        return self._default_ngram_length
+
+
+
     def max_depth(self):
         """ Returns the maximum depth of the Trie
         
@@ -97,6 +113,26 @@ class MemoryTrie:
         """
         self._check_dirty()
         return len(self.normalization)
+
+
+    def add_sentence(self, sentence, freq=1, ngram_length=None):
+        """ Add a sentence to the model.
+
+        :param sentence: The sentence to add. Should be a list of tokens.
+        :param freq: The number of times to add this sentence. One by default. May be negative to "remove" a sentence.
+        :param ngram_length: The length of n-grams that are stored. If None the 
+          default value setup in __init__ is used.
+        """
+        if freq <= 0:
+            raise ValueError("freq should be larger or equal to 1")
+        if not sentence:
+            return
+        if ngram_length is None:
+            ngram_length = self.default_ngram_length
+        token_list = [self.sentence_start] + sentence + [self.sentence_end]
+        for i in range(len(token_list) - 1):
+            self.add_ngram(token_list[i:i+ngram_length], freq)
+        token_list = token_list[::-1]
 
     def clear(self):
         """ Clear the trie.
