@@ -191,8 +191,6 @@ class MemoryTrie:
         # recurifs calls
         for child in node.iter_childs():
             self._update_stats_rec(node.entropy, depth + 1, child)
-        print(("self.normalization", self.normalization))
-        print(("self.normalization", self.normalization))
 
     def update_stats(self):
         """ Update the internal statistics (like entropy, and stdev & means)
@@ -323,8 +321,8 @@ class MemoryTrie:
                 nev /= stdev
             except ZeroDivisionError:
                 return float("nan")
-        print("ngram, nev, ev, mean, stdev")
-        print(ngram, nev, ev, mean, stdev)
+       #print("ngram, nev, ev, mean, stdev")
+       #print(ngram, nev, ev, mean, stdev)
         return nev
 
 
