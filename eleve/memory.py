@@ -185,12 +185,14 @@ class MemoryTrie:
             mean, stdev, count = self.normalization[depth - 1]
             old_mean = mean
             count += 1
-            mean += (ev - old_mean) / count
+            mean  += (ev - old_mean) / count
             stdev += (ev - old_mean) * (ev - mean)
             self.normalization[depth - 1] = mean, stdev, count
         # recurifs calls
         for child in node.iter_childs():
             self._update_stats_rec(node.entropy, depth + 1, child)
+        print(("self.normalization", self.normalization))
+        print(("self.normalization", self.normalization))
 
     def update_stats(self):
         """ Update the internal statistics (like entropy, and stdev & means)
@@ -315,11 +317,14 @@ class MemoryTrie:
         if math.isnan(ev):
             return float("nan")
         nev = ev - mean
+
         if z_score:
             try:
                 nev /= stdev
             except ZeroDivisionError:
                 return float("nan")
+        print("ngram, nev, ev, mean, stdev")
+        print(ngram, nev, ev, mean, stdev)
         return nev
 
 
