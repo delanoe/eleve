@@ -49,22 +49,26 @@ def test_bidirection(corpus,tokens):
 
     print("[(token, count, entropy, ev, autonomy, fwd_entropy, fwd_ev, fwd_autonomy, bwd_entropy, bwd_ev, bwd_autonomy)]")
     for token in tokens:
+        tokenRev = token[::-1]
         print(",",(" ".join(token)
               , storage.query_count(token)
               , storage.query_entropy(token)
               , storage.query_ev(token)
               , storage.query_autonomy(token)
+              
               , storage.fwd.query_entropy(token)
               , storage.fwd.query_ev(token)
               , storage.fwd.query_autonomy(token)
-              , storage.bwd.query_entropy(token)
-              , storage.bwd.query_ev(token)
-              , storage.bwd.query_autonomy(token)
+              
+              , storage.bwd.query_entropy(tokenRev)
+              , storage.bwd.query_ev(tokenRev)
+              , storage.bwd.query_autonomy(tokenRev)
               ))
 
 def test_mean(ref, f, b):
     my = (f + b) / 2
-    if ref == my or (isnan(ref) or isnan(my)):
+    
+    if ref is my or (isnan(ref) and isnan(my)):
         print("PASS")
     else:
         print("FAIL", 'ref:', ref, 'my:', my, 'fwd:', f, 'bwd:', b)
