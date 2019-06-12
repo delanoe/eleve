@@ -5,6 +5,14 @@ from eleve.memory import MemoryStorage
 from eleve.memory import MemoryTrie
 from math import isnan
 
+
+EPSILON = 0.0001
+
+def float_equal(a, b):
+    return (a != a and b != b) or abs(a - b) < EPSILON
+
+
+
 corpus0 = [["New","York","is","New","York","and","New","York"]]
 corpus0t = ["\ue02b","New","York","is","New","York","and","New","York","\ue02d"]
 
@@ -68,7 +76,7 @@ def test_bidirection(corpus,tokens):
 def test_mean(ref, f, b):
     my = (f + b) / 2
     
-    if ref is my or (isnan(ref) and isnan(my)):
+    if float_equal(ref,my) or (isnan(ref) and isnan(my)):
         print("PASS")
     else:
         print("FAIL", 'ref:', ref, 'my:', my, 'fwd:', f, 'bwd:', b)
