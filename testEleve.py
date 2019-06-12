@@ -64,7 +64,7 @@ def test_bidirection(corpus,tokens):
 
 def test_mean(ref, f, b):
     my = (f + b) / 2
-    if ref is my or (isnan(ref) and isnan(my)):
+    if ref == my or (isnan(ref) or isnan(my)):
         print("PASS")
     else:
         print("FAIL", 'ref:', ref, 'my:', my, 'fwd:', f, 'bwd:', b)
