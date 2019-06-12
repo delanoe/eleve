@@ -88,15 +88,16 @@ def test_bidirection_mean(corpus,tokens):
         storage.add_sentence(sent)
 
     for token in tokens:
+        tokenRev = token[::-1]
         test_mean(storage.query_entropy(token),
                   storage.fwd.query_entropy(token),
-                  storage.bwd.query_entropy(token))
+                  storage.bwd.query_entropy(tokenRev))
         test_mean(storage.query_ev(token),
                   storage.fwd.query_ev(token),
-                  storage.bwd.query_ev(token))
+                  storage.bwd.query_ev(tokenRev))
         test_mean(storage.query_autonomy(token),
                   storage.fwd.query_autonomy(token),
-                  storage.bwd.query_autonomy(token))
+                  storage.bwd.query_autonomy(tokenRev))
 
 def tests_bidirection():
     test_bidirection_mean(corpus0,tokens0)
